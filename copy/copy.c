@@ -5,6 +5,7 @@
 */
 
 #include "copy.h"
+#include "stats.h" // in copy.h but include here too for explicit clarity
 
 int get_character(CopyContext *copy_context) {
   if (!copy_context || !copy_context->source) {
@@ -24,7 +25,7 @@ int get_character(CopyContext *copy_context) {
       BUFFER_SIZE,           // param: buffer size
       copy_context->source   // param: source to copy to (destination)
     );
-    printf("%s\n", "setting buffer position to 0");
+    // printf("%s\n", "setting buffer position to 0");
     copy_context->buffer_pos = 0;
     if (copy_context->buffer_len == 0) {
       printf("%s\n", "ok to return end of file");
@@ -44,7 +45,7 @@ int put_character(CopyContext *copy_context, int character_to_write) {
     }
     return -1;
   }
-  printf("%s\n", "writing character to destination file");
+  // printf("%s\n", "writing character to destination file");
   if (fputc(character_to_write, copy_context->dest) == EOF) {
     printf("%s\n", "error writing character to destination file");
     copy_context->error = 1;
@@ -53,7 +54,7 @@ int put_character(CopyContext *copy_context, int character_to_write) {
   return 0;
 }
 
-int copy_stream(CopyContext *copy_context) {
+int copy_stream(CopyContext *copy_context, StatsContext *stats) {
   printf("%s\n", "beginning copy stream operation");
   int current_character;
   while ((current_character = get_character(copy_context)) != EOF) {
@@ -62,6 +63,8 @@ int copy_stream(CopyContext *copy_context) {
       printf("%s\n", "error during put_character operation");
       return -1;
     }
+    printf("%s\n", "updating statistics for current character");
+    update_stats(stats, current_character);
   }
   printf("%s\n", "end of file reached, copy stream operation complete");
   return copy_context->error ? -1 : 0;
