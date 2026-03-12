@@ -58,12 +58,12 @@ int copy_stream(CopyContext *copy_context, StatsContext *stats) {
   printf("%s\n", "beginning copy stream operation");
   int current_character;
   while ((current_character = get_character(copy_context)) != EOF) {
-    printf("%s\n", "reading character from source, writing to destination");
+    //printf("%s\n", "reading character from source, writing to destination");
     if (put_character(copy_context, current_character) != 0) {
       printf("%s\n", "error during put_character operation");
       return -1;
     }
-    printf("%s\n", "updating statistics for current character");
+    //printf("%s\n", "updating statistics for current character");
     update_stats(stats, current_character);
   }
   printf("%s\n", "end of file reached, copy stream operation complete");
