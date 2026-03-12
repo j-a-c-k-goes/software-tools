@@ -8,6 +8,7 @@
 #define COPY_H
 
 #include <stdio.h>
+#include "stats.h"
 #define BUFFER_SIZE 4096
 
 typedef struct {
@@ -21,6 +22,6 @@ typedef struct {
 
 int get_character(CopyContext *copy_context);
 int put_character(CopyContext *copy_context, int character_to_write);
-int copy_stream(CopyContext *ctx);
+int copy_stream(CopyContext *ctx, StatsContext *stats);
 
 #endif
