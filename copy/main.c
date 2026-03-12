@@ -8,6 +8,7 @@
 #include "copy.h"
 #include "fileops.h"
 #include "errors.h"
+#include "stats.h"
 
 #define EXPECTED_ARG_COUNT 3
 int main(int argc, char *argv[]) {
@@ -33,17 +34,30 @@ int main(int argc, char *argv[]) {
     exit(EXIT_FAILURE);
   }
 
-  printf("%s\n", "starting copy stream operation");
-  if (copy_stream(copy_context) != 0) {
-    printf("%s\n", "copy stream operation failed");
-    report_error("copy operation failed");
+  printf("%s\n", "initializing stats context");
+  StatsContext *stats = initialize_stats_context();
+  if (!stats) {
+    printf("%s\n", "stats context initialization failed");
     cleanup_copy_context(copy_context);
     exit(EXIT_FAILURE);
   }
 
+  printf("%s\n", "starting copy stream operation");
+  if (copy_stream(copy_context, stats) != 0) {
+    printf("%s\n", "copy stream operation failed");
+    report_error("copy operation failed");
+    cleanup_copy_context(copy_context);
+    cleanup_stats_context(stats);
+    exit(EXIT_FAILURE);
+  }
+
   printf("%s\n", "copy stream operation succeeded");
+  printf("%s\n", "displaying file statistics");
+  display_stats(stats);
   printf("%s\n", "cleaning up copy context");
   cleanup_copy_context(copy_context);
+  printf("%s\n", "cleaning up stats context");
+  cleanup_stats_context(stats);
   report_success("file copied successfully");
   printf("%s\n", "copy program completed successfully");
   exit(EXIT_SUCCESS);
