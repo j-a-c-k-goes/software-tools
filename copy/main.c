@@ -1,27 +1,47 @@
 /*
-  file: main.c
-  context: entry point
+  file:        main.c
+  context:     entry point
   description: orchestrates file operations, copy logic, and error reporting
 */
 
 #include <stdlib.h>
+#include <string.h>
 #include "copy.h"
 #include "fileops.h"
 #include "errors.h"
 #include "stats.h"
 
 #define EXPECTED_ARG_COUNT 3
+#define SENTENCE_COUNT_FLAG "--sentence-count"
+
 int main(int argc, char *argv[]) {
   printf("%s\n", "copy program started");
   printf("%s %d\n", "argument count:", argc);
   
-  if (argc != EXPECTED_ARG_COUNT) {
-    printf("%s\n", "invalid argument count, expected 3");
-    report_error("usage: copy <source> <destination>");
+  int enable_sentence_count = 0;
+  int arg_index             = 1;
+  
+  // parse optional flags
+  printf("%s\n", "parsing command line arguments");
+  while (arg_index < argc && argv[arg_index][0] == '-') {
+    printf("%s %s\n", "processing flag:", argv[arg_index]);
+    if (strcmp(argv[arg_index], SENTENCE_COUNT_FLAG) == 0) {
+      printf("%s\n", "sentence counting enabled");
+      enable_sentence_count = 1;
+    }
+    arg_index++;
+  }
+  
+  // validate required arguments
+  int remaining_args = argc - arg_index;
+  if (remaining_args != 2) {
+    printf("%s\n", "invalid argument count, expected 2 files after flags");
+    report_error("usage: copy [--sentence-count] <source> <destination>");
     exit(EXIT_FAILURE);
   }
-  const char *source_file      = argv[1]; // declare arg to char pointer
-  const char *destination_file = argv[2]; // declare arg to char pointer
+  
+  const char *source_file      = argv[arg_index];     // declare arg to char pointer
+  const char *destination_file = argv[arg_index + 1]; // declare arg to char pointer
 
   printf("%s %s\n", "source file:", source_file);
   printf("%s %s\n", "destination file:", destination_file);
@@ -35,7 +55,7 @@ int main(int argc, char *argv[]) {
   }
 
   printf("%s\n", "initializing stats context");
-  StatsContext *stats = initialize_stats_context();
+  StatsContext *stats = initialize_stats_context(enable_sentence_count);
   if (!stats) {
     printf("%s\n", "stats context initialization failed");
     cleanup_copy_context(copy_context);
