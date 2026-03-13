@@ -6,11 +6,10 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include "copy.h"
-#include "fileops.h"
-#include "errors.h"
-#include "stats.h"
-#include "tab_handler.h"
+#include "fileops/fileops.h"
+#include "errors/errors.h"
+#include "stats/stats.h"
+#include "fileops/tab_handler.h"
 
 #define EXPECTED_ARG_COUNT 3
 #define SENTENCE_COUNT_FLAG "--sentence-count"
@@ -69,8 +68,8 @@ int main(int argc, char *argv[]) {
   }
 
   printf("%s\n", "initializing tab context");
-  TabContext *tab_ctx = initialize_tab_context(enable_tab_handler);
-  if (!tab_ctx) {
+  TabContext *tab_context = initialize_tab_context(enable_tab_handler);
+  if (!tab_context) {
     printf("%s\n", "tab context initialization failed");
     cleanup_copy_context(copy_context);
     cleanup_stats_context(stats);
@@ -78,7 +77,7 @@ int main(int argc, char *argv[]) {
   }
 
   printf("%s\n", "starting copy stream operation");
-  if (copy_stream(copy_context, stats, tab_ctx) != 0) {
+  if (copy_stream(copy_context, stats, tab_context) != 0) {
     printf("%s\n", "copy stream operation failed");
     report_error("copy operation failed");
     cleanup_copy_context(copy_context);
@@ -94,7 +93,7 @@ int main(int argc, char *argv[]) {
   printf("%s\n", "cleaning up stats context");
   cleanup_stats_context(stats);
   printf("%s\n", "cleaning up tab context");
-  cleanup_tab_context(tab_ctx);
+  cleanup_tab_context(tab_context);
   report_success("file copied successfully");
   printf("%s\n", "copy program completed successfully");
   exit(EXIT_SUCCESS);
