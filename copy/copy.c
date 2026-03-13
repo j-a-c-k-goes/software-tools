@@ -6,6 +6,7 @@
 
 #include "copy.h"
 #include "stats.h" // in copy.h but include here too for explicit clarity
+#include "tab_handler.h"
 
 int get_character(CopyContext *copy_context) {
   if (!copy_context || !copy_context->source) {
@@ -54,11 +55,18 @@ int put_character(CopyContext *copy_context, int character_to_write) {
   return 0;
 }
 
-int copy_stream(CopyContext *copy_context, StatsContext *stats) {
+int copy_stream(CopyContext *copy_context, StatsContext *stats, TabContext *tab_ctx) {
   printf("%s\n", "beginning copy stream operation");
   int current_character;
   while ((current_character = get_character(copy_context)) != EOF) {
     //printf("%s\n", "reading character from source, writing to destination");
+    
+    // apply tab handling if enabled
+    if (tab_ctx && tab_ctx->enable_tab_handler) {
+      printf("%s\n", "applying tab handler to current character");
+      current_character = de_tab(tab_ctx, current_character);
+    }
+    
     if (put_character(copy_context, current_character) != 0) {
       printf("%s\n", "error during put_character operation");
       return -1;
