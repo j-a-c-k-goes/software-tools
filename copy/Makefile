@@ -1,21 +1,27 @@
-/*
-  file:        Makefile
-  context:     build automation
-  description: compiles copy project with object files and linking
-*/
+//  file:        Makefile
+//  context:     build automation
+//  description: compiles copy project with object files and linking
 
-CC       = gcc
-CFLAGS   = -Wall -Wextra -std=c99
-TARGET   = copy
-SOURCES  = main.c copy.c fileops.c errors.c stats.c
-OBJECTS  = $(SOURCES:.c=.o)
+CC        = gcc
+CFLAGS    = -Wall -Wextra -std=c99
+BIN_DIR   = bin
+BUILD_DIR = build
+TARGET    = $(BIN_DIR)/copy
+SOURCES   = main.c copy.c fileops.c errors.c stats.c
+OBJECTS   = $(addprefix $(BUILD_DIR)/,$(SOURCES:.c=.o))
 
-all: $(TARGET)
+all: $(BIN_DIR) $(BUILD_DIR) $(TARGET)
+
+$(BIN_DIR):
+	mkdir -p $(BIN_DIR)
+
+$(BUILD_DIR):
+	mkdir -p $(BUILD_DIR)
 
 $(TARGET): $(OBJECTS)
 	$(CC) $(CFLAGS) -o $(TARGET) $(OBJECTS)
 
-%.o: %.c
+$(BUILD_DIR)/%.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
