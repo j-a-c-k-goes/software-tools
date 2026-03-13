@@ -48,7 +48,7 @@ CopyContext* initialize_copy_context(const char *source_path, const char *dest_p
 }
 
 void cleanup_copy_context(CopyContext *copy_context) {
-  printf("%s\n", "beginning cleanup of copy context");
+  //printf("%s\n", "beginning cleanup of copy context");
   if (!copy_context) {
     printf("%s\n", "copy context is null, returning");
     return;

@@ -76,7 +76,7 @@ void display_stats(StatsContext *stats) {
     return;
   }
 
-  printf("%s\n", "displaying file statistics");
+  //printf("%s\n", "displaying file statistics");
   printf("%-20s %lu\n", "characters:", stats->character_count);
   printf("%-20s %lu\n", "lines:", stats->line_count);
   printf("%-20s %lu\n", "words:", stats->word_count);
@@ -86,7 +86,7 @@ void display_stats(StatsContext *stats) {
 }
 
 void cleanup_stats_context(StatsContext *stats) {
-  printf("%s\n", "beginning cleanup of stats context");
+  //printf("%s\n", "beginning cleanup of stats context");
   if (!stats) {
     printf("%s\n", "stats context is null, returning");
     return;

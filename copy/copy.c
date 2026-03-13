@@ -37,7 +37,7 @@ int get_character(CopyContext *copy_context) {
 }
 
 int put_character(CopyContext *copy_context, int character_to_write) {
-  printf("%s\n", "validating copy context and destination file");
+  //printf("%s\n", "validating copy context and destination file");
   if (!copy_context || !copy_context->dest) {
     printf("%s\n", "invalid copy context or destination file");
     if (copy_context) {
@@ -55,16 +55,16 @@ int put_character(CopyContext *copy_context, int character_to_write) {
   return 0;
 }
 
-int copy_stream(CopyContext *copy_context, StatsContext *stats, TabContext *tab_ctx) {
+int copy_stream(CopyContext *copy_context, StatsContext *stats, TabContext *tab_context) {
   printf("%s\n", "beginning copy stream operation");
   int current_character;
   while ((current_character = get_character(copy_context)) != EOF) {
     //printf("%s\n", "reading character from source, writing to destination");
     
     // apply tab handling if enabled
-    if (tab_ctx && tab_ctx->enable_tab_handler) {
+    if (tab_context && tab_context->enable_tab_handler) {
       printf("%s\n", "applying tab handler to current character");
-      current_character = de_tab(tab_ctx, current_character);
+      current_character = de_tab(tab_context, current_character);
     }
     
     if (put_character(copy_context, current_character) != 0) {
