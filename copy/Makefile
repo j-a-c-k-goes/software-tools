@@ -7,7 +7,7 @@ CFLAGS    = -Wall -Wextra -std=c99
 BIN_DIR   = bin
 BUILD_DIR = build
 TARGET    = $(BIN_DIR)/copy
-SOURCES   = main.c copy.c fileops.c errors.c stats.c
+SOURCES   = main.c copy.c fileops.c errors.c stats.c tab_handler.c
 OBJECTS   = $(addprefix $(BUILD_DIR)/,$(SOURCES:.c=.o))
 
 all: $(BIN_DIR) $(BUILD_DIR) $(TARGET)
